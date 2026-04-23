@@ -28,7 +28,7 @@ const difficultyOptions: {
 export default function Settings() {
     const settings = useGameStore((s) => s.settings);
     const updateSettings = useGameStore((s) => s.updateSettings);
-    const setView = useGameStore((s) => s.setView);
+    const startGame = useGameStore((s) => s.startGame);
     const { t } = useTranslation();
     const username = useGameStore((s) => s.username);
     const canPlay = /^[a-zA-Z0-9_æøåÆØÅ]{2,16}$/.test(username);
@@ -108,7 +108,7 @@ export default function Settings() {
                         {timeForDifficulty}s
                     </p>
                     <motion.button
-                        onClick={() => canPlay && setView("game")}
+                        onClick={() => canPlay && startGame()}
                         disabled={!canPlay}
                         className={`flex items-center gap-2 px-6 py-3 font-bold rounded-xl shadow-lg transition-colors ${canPlay
                             ? "bg-violet-500 hover:bg-violet-400 shadow-violet-500/30 text-white cursor-pointer"

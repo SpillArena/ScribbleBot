@@ -1,24 +1,34 @@
 // src/components/game/GamePage.tsx
 import { motion } from "framer-motion";
+import { useEffect } from "react";
 import Layout from "../_layout";
 import WordHint from "./WordHint";
 import DrawingCanvas from "./DrawingCanvas";
 import GuessList from "./GuessList";
 import GuessInput from "./GuessInput";
 import GameHeader from "./GameHeader";
-import { useEffect } from "react";
+import CountdownOverlay from "./CountdownOverlay";
+import RoundEndOverlay from "./RoundEndOverlay";
+import { useRoundTimer } from "../../hooks/useRoundTimer";
+import { useGameStore } from "../../store/gameStore";
 
 export default function GamePage() {
+    const setPhase = useGameStore((s) => s.setPhase);
+    useRoundTimer();
+
+    // Kick off countdown when page mounts
+    useEffect(() => {
+        setPhase("countdown");
+    }, [setPhase]);
+
     useEffect(() => {
         const handleBeforeUnload = (e: BeforeUnloadEvent) => {
             e.preventDefault();
         };
-
         window.addEventListener("beforeunload", handleBeforeUnload);
-        return () => {
-            window.removeEventListener("beforeunload", handleBeforeUnload);
-        };
+        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
     }, []);
+
     return (
         <Layout>
             <motion.div
@@ -27,10 +37,8 @@ export default function GamePage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
             >
-                {/* Round / Timer / Score */}
                 <GameHeader />
 
-                {/* Word hint */}
                 <motion.div
                     className="flex items-center justify-center py-2"
                     initial={{ opacity: 0 }}
@@ -40,17 +48,18 @@ export default function GamePage() {
                     <WordHint />
                 </motion.div>
 
-                {/* Main game area */}
                 <motion.div
                     className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15, duration: 0.3, ease: "easeOut" }}
                 >
-                    {/* Canvas */}
-                    <DrawingCanvas />
+                    <div className="relative">
+                        <CountdownOverlay />
+                        <RoundEndOverlay />
+                        <DrawingCanvas />
+                    </div>
 
-                    {/* Right panel: guess log + input */}
                     <div className="flex flex-col gap-3 min-h-[500px]">
                         <div className="flex-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4 overflow-hidden flex flex-col">
                             <GuessList />
