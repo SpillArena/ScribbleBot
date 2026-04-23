@@ -2,8 +2,9 @@
 import { useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useGameStore } from "./store/gameStore";
-import { useThemeStore } from "./store/themeStore";;
-import LandingPage from './components/LandingPage';
+import { useThemeStore } from "./store/themeStore";
+import LandingPage from "./components/LandingPage";
+import GamePage from "./components/game/GamePage";
 
 export default function App() {
   const view = useGameStore((s) => s.view);
@@ -21,11 +22,7 @@ export default function App() {
   return (
     <AnimatePresence mode="wait">
       {view === "landing" && <LandingPage key="landing" />}
-      {view === "game" && (
-        <div key="game" className="text-white">
-          Game page coming soon
-        </div>
-      )}
+      {view === "game" && <GamePage key="game" />}
     </AnimatePresence>
   );
 }

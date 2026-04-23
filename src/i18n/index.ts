@@ -52,6 +52,16 @@ const resources = {
                 play: "Start spill",
             },
             footer: { madeBy: "Laget av" },
+            game: {
+                round: "Runde",
+                of: "av",
+                timeLeft: "Tid igjen",
+                guess: "Gjett ordet...",
+                submit: "Gjett",
+                correct: "Riktig!",
+                gaveUp: "Ordet var",
+                guessLog: "Gjetninger",
+            },
         },
     },
     en: {
@@ -103,6 +113,16 @@ const resources = {
                 play: "Start Game",
             },
             footer: { madeBy: "Made by" },
+            game: {
+                round: "Round",
+                of: "of",
+                timeLeft: "Time left",
+                guess: "Guess the word...",
+                submit: "Guess",
+                correct: "Correct!",
+                gaveUp: "The word was",
+                guessLog: "Guesses",
+            },
         },
     },
 };
