@@ -16,7 +16,6 @@ export default function GamePage() {
     const setPhase = useGameStore((s) => s.setPhase);
     useRoundTimer();
 
-    // Kick off countdown when page mounts
     useEffect(() => {
         setPhase("countdown");
     }, [setPhase]);
@@ -26,13 +25,14 @@ export default function GamePage() {
             e.preventDefault();
         };
         window.addEventListener("beforeunload", handleBeforeUnload);
-        return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+        return () =>
+            window.removeEventListener("beforeunload", handleBeforeUnload);
     }, []);
 
     return (
         <Layout>
             <motion.div
-                className="mx-auto max-w-5xl px-6 py-6 flex flex-col gap-4"
+                className="mx-auto max-w-5xl w-full px-6 py-6 flex flex-col gap-4"
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3, ease: "easeOut" }}
@@ -49,18 +49,18 @@ export default function GamePage() {
                 </motion.div>
 
                 <motion.div
-                    className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-4"
+                    className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-4 w-full min-w-0"
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.15, duration: 0.3, ease: "easeOut" }}
                 >
-                    <div className="relative">
+                    <div className="relative min-w-0">
                         <CountdownOverlay />
                         <RoundEndOverlay />
                         <DrawingCanvas />
                     </div>
 
-                    <div className="flex flex-col gap-3 min-h-[500px]">
+                    <div className="flex flex-col gap-3 min-h-[500px] min-w-0">
                         <div className="flex-1 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4 overflow-hidden flex flex-col">
                             <GuessList />
                         </div>

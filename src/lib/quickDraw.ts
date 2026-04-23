@@ -2,6 +2,7 @@
 type Stroke = [number[], number[], number[]?];
 type StrokeData = Stroke[];
 
+{/*TODO: FIX */}
 const BASE_URL =
     "https://storage.googleapis.com/quickdraw_dataset/full/simplified";
 

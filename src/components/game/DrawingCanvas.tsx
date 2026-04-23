@@ -43,7 +43,7 @@ export default function DrawingCanvas() {
             <canvas
                 ref={canvasRef}
                 width={800}
-                height={600}
+                height={650}
                 className="w-full h-full block bg-white"
             />
         </div>

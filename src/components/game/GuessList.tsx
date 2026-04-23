@@ -16,11 +16,11 @@ export default function GuessList() {
     }, [guesses]);
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full w-full">
             <p className="text-xs font-semibold text-black/40 dark:text-white/40 uppercase tracking-wider mb-2">
                 {t("game.guessLog")}
             </p>
-            <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 pr-1">
+            <div className="flex-1 overflow-y-auto flex flex-col gap-1.5 w-full">
                 <AnimatePresence initial={false}>
                     {guesses.length === 0 && (
                         <p className="text-xs text-black/30 dark:text-white/30 text-center mt-4">
@@ -30,7 +30,7 @@ export default function GuessList() {
                     {guesses.map((g, i) => (
                         <motion.div
                             key={i}
-                            className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm ${g.correct
+                            className={`w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm ${g.correct
                                     ? "bg-green-500/10 border border-green-500/20"
                                     : "bg-black/5 dark:bg-white/5 border border-black/5 dark:border-white/5"
                                 }`}
