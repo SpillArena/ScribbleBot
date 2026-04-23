@@ -1,4 +1,4 @@
-// src/components/LandingPage.tsx
+// src/components/ui/LandingPage.tsx
 import Layout from "./_layout";
 import Hero from "./landing/Hero";
 import HowToPlay from "./landing/HowToPlay";

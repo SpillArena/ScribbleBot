@@ -1,10 +1,22 @@
 // src/App.tsx
-import { useGameStore } from "./store/gameStore";
+import { useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
-import LandingPage from "./components/LandingPage";
+import { useGameStore } from "./store/gameStore";
+import { useThemeStore } from "./store/themeStore";;
+import LandingPage from './components/LandingPage';
 
 export default function App() {
   const view = useGameStore((s) => s.view);
+  const theme = useThemeStore((s) => s.theme);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (theme === "dark") {
+      root.classList.add("dark");
+    } else {
+      root.classList.remove("dark");
+    }
+  }, [theme]);
 
   return (
     <AnimatePresence mode="wait">

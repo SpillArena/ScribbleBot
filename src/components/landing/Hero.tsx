@@ -2,10 +2,12 @@
 import { motion } from "framer-motion";
 import { useGameStore } from "../../store/gameStore";
 import { Paintbrush } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import logo from "../../assets/logo.png";
 
 export default function Hero() {
     const setView = useGameStore((s) => s.setView);
+    const { t } = useTranslation();
 
     return (
         <motion.section
@@ -16,12 +18,12 @@ export default function Hero() {
         >
             <img src={logo} alt="ScribbleBot logo" className="w-32 h-32" />
 
-            <h1 className="text-6xl font-extrabold tracking-tight text-white">
+            <h1 className="text-6xl font-extrabold tracking-tight">
                 Scribble<span className="text-violet-400">Bot</span>
             </h1>
 
-            <p className="text-lg text-white/60 max-w-md">
-                A bot draws. You guess. How fast can you figure it out?
+            <p className="text-lg text-black/50 dark:text-white/60 max-w-md">
+                {t("hero.subtitle")}
             </p>
 
             <motion.button
@@ -31,7 +33,7 @@ export default function Hero() {
                 whileTap={{ scale: 0.97 }}
             >
                 <Paintbrush size={22} />
-                Play Now
+                {t("hero.play")}
             </motion.button>
         </motion.section>
     );
