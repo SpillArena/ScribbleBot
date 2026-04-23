@@ -5,7 +5,10 @@ import { initReactI18next } from "react-i18next";
 const resources = {
     no: {
         translation: {
-            nav: { backToArena: "Tilbake til Arena" },
+            nav: {
+                backToArena: "Tilbake til Arena",
+                forfeit: "Gi opp",
+            },
             hero: {
                 subtitle: "En bot tegner. Du gjetter. Hvor raskt klarer du det?",
                 play: "Spill nå",
@@ -66,9 +69,13 @@ const resources = {
     },
     en: {
         translation: {
-            nav: { backToArena: "Back to Arena" },
+            nav: {
+                backToArena: "Back to Arena",
+                forfeit: "Forfeit",
+            },
             hero: {
-                subtitle: "A bot draws. You guess. How fast can you figure it out?",
+                subtitle:
+                    "A bot draws. You guess. How fast can you figure it out?",
                 play: "Play Now",
             },
             howToPlay: {
