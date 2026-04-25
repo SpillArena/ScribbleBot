@@ -1,5 +1,6 @@
 // src/store/gameStore.ts
 import { create } from "zustand";
+import { saveScore } from "../lib/leaderbord";
 
 export type Difficulty = "easy" | "medium" | "hard";
 export type View = "landing" | "game";
@@ -11,60 +12,39 @@ export const difficultyTime: Record<Difficulty, number> = {
     hard: 30,
 };
 
-export const wordBank: Record<Difficulty, string[]> = {
-    easy: [
-        "apple",
-        "house",
-        "dog",
-        "cat",
-        "tree",
-        "car",
-        "pizza",
-        "banana",
-        "ball",
-        "sun",
-        "book",
-        "clock",
-    ],
-    medium: [
-        "elephant",
-        "backpack",
-        "mountain",
-        "keyboard",
-        "airplane",
-        "umbrella",
-        "chocolate",
-        "robot",
-        "volcano",
-        "dinosaur",
-        "bicycle",
-        "treasure map",
-    ],
-    hard: [
-        "photosynthesis",
-        "constellation",
-        "metamorphosis",
-        "architecture",
-        "bioluminescence",
-        "kaleidoscope",
-        "cartographer",
-        "symphony orchestra",
-        "jurisdiction",
-        "cryptography",
-        "microprocessor",
-        "intercontinental",
-    ],
-};
+const FALLBACK_WORDS: string[] = [
+    "apple", "banana", "cat", "dog", "house", "car", "tree", "fish",
+    "bird", "clock", "pizza", "guitar", "elephant", "bicycle", "mountain",
+    "rainbow", "umbrella", "volcano", "keyboard", "airplane",
+];
 
-function pickRandomWord(difficulty: Difficulty, previousWord?: string): string {
-    const pool = wordBank[difficulty];
-    if (pool.length === 0) return "";
+let wordPool: string[] = [...FALLBACK_WORDS];
 
-    if (pool.length === 1) return pool[0];
+export async function initWordBank(): Promise<void> {
+    try {
+        const res = await fetch(
+            "https://raw.githubusercontent.com/googlecreativelab/quickdraw-dataset/master/categories.txt"
+        );
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const text = await res.text();
+        const words = text.trim().split("\n").filter(Boolean);
+        if (words.length > 0) wordPool = words;
+    } catch {
+        console.warn("Could not fetch Quick Draw categories, using fallback word list.");
+    }
+}
 
-    let next = pool[Math.floor(Math.random() * pool.length)];
+export function getWordPool(): string[] {
+    return wordPool;
+}
+
+function pickRandomWord(previousWord?: string): string {
+    if (wordPool.length === 0) return "";
+    if (wordPool.length === 1) return wordPool[0];
+
+    let next = wordPool[Math.floor(Math.random() * wordPool.length)];
     while (next === previousWord) {
-        next = pool[Math.floor(Math.random() * pool.length)];
+        next = wordPool[Math.floor(Math.random() * wordPool.length)];
     }
     return next;
 }
@@ -92,6 +72,7 @@ interface GameState {
     timeLeft: number;
     revealedIndices: number[];
     wordGuessed: boolean;
+    forfeit: boolean;
     setView: (view: View) => void;
     setPhase: (phase: GamePhase) => void;
     updateSettings: (settings: Partial<GameSettings>) => void;
@@ -101,9 +82,11 @@ interface GameState {
     setTimeLeft: (time: number) => void;
     setRevealedIndices: (indices: number[]) => void;
     setWordGuessed: (guessed: boolean) => void;
+    setForfeit: (forfeit: boolean) => void;
     startGame: () => void;
     nextRound: () => void;
     resetGame: () => void;
+    forfeitRound: () => void;
 }
 
 const defaultSettings: GameSettings = {
@@ -118,11 +101,12 @@ export const useGameStore = create<GameState>((set) => ({
     score: 0,
     currentRound: 1,
     username: "",
-    currentWord: pickRandomWord(defaultSettings.difficulty),
+    currentWord: pickRandomWord(),
     guesses: [],
     timeLeft: 0,
     revealedIndices: [],
     wordGuessed: false,
+    forfeit: false,
     setView: (view) => set({ view }),
     setPhase: (phase) => set({ phase }),
     updateSettings: (newSettings) =>
@@ -136,40 +120,60 @@ export const useGameStore = create<GameState>((set) => ({
     setTimeLeft: (timeLeft) => set({ timeLeft }),
     setRevealedIndices: (revealedIndices) => set({ revealedIndices }),
     setWordGuessed: (wordGuessed) => set({ wordGuessed }),
+    setForfeit: (forfeit) => set({ forfeit }),
     startGame: () =>
-        set((state) => ({
+        set(() => ({
             view: "game",
             phase: "countdown",
             score: 0,
             currentRound: 1,
-            currentWord: pickRandomWord(state.settings.difficulty),
+            currentWord: pickRandomWord(),
             guesses: [],
             timeLeft: 0,
             revealedIndices: [],
             wordGuessed: false,
+            forfeit: false,
         })),
     nextRound: () =>
         set((state) => ({
             phase: "countdown",
             currentRound: state.currentRound + 1,
-            currentWord: pickRandomWord(state.settings.difficulty, state.currentWord),
+            currentWord: pickRandomWord(state.currentWord),
             guesses: [],
             timeLeft: 0,
             revealedIndices: [],
             wordGuessed: false,
+            forfeit: false,
         })),
     resetGame: () =>
-        set({
-            score: 0,
-            currentRound: 1,
-            guesses: [],
-            currentWord: "",
-            phase: "roundEnd", 
-            timeLeft: 0,
-            revealedIndices: [],
-            wordGuessed: false,
-            settings: defaultSettings,
-            username: "",
-            view: "landing",
+        set((state) => {
+            saveScore({
+                username: state.username || "Anonym",
+                score: state.score,
+                difficulty: state.settings.difficulty,
+                rounds: state.settings.rounds,
+                date: new Date().toISOString(),
+            });
+            return {
+                score: 0,
+                currentRound: 1,
+                guesses: [],
+                currentWord: "",
+                phase: "countdown",
+                timeLeft: 0,
+                revealedIndices: [],
+                wordGuessed: false,
+                forfeit: false,
+                settings: defaultSettings,
+                username: "",
+                view: "landing",
+            };
         }),
+    forfeitRound: () =>
+    set(() => ({
+        phase: "roundEnd",
+        forfeit: true,
+        timeLeft: 0,
+        wordGuessed: false,
+    })),
 }));

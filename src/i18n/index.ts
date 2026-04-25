@@ -6,12 +6,17 @@ const resources = {
     no: {
         translation: {
             nav: {
-                backToArena: "Tilbake til Arena",
                 forfeit: "Gi opp",
+                forfeitConfirm: "Gi opp runden?",
+                forfeitWarning: "Du vil ikke få poeng for denne runden",
+                forfeitYes: "Ja, gi opp",
+                forfeitCancel: "Fortsett å spille",
+                backToArena: "Tilbake til arenaen"
             },
             hero: {
                 subtitle: "En bot tegner. Du gjetter. Hvor raskt klarer du det?",
                 play: "Spill nå",
+                wordLanguageDisclaimer: "Ordene er alltid på engelsk"
             },
             howToPlay: {
                 title: "Slik spiller du",
@@ -19,7 +24,7 @@ const resources = {
                     {
                         title: "Boten tegner",
                         description:
-                            "En AI-bot tegner et hemmelig ord på lerretet, strek for strek.",
+                            "En robot tegner et hemmelig ord på lerretet, strek for strek.",
                     },
                     {
                         title: "Du gjetter",
@@ -69,19 +74,39 @@ const resources = {
                 quit: "Avslutt",
                 continue: "Neste runde",
                 finish: "Avslutt",
+                forfeited: "Ga opp runden",
             },
+            leaderboard: {
+                title: "Toppliste",
+                reset: "Nullstill",
+                confirmQuestion: "Er du sikker?",
+                confirmYes: "Ja, slett",
+                confirmCancel: "Avbryt",
+                empty: "Ingen resultater ennå. Spill et spill!",
+                rounds: "runder",
+                difficulty: {
+                    easy: "Lett",
+                    medium: "Middels",
+                    hard: "Vanskelig"
+                }
+            }
         },
     },
     en: {
         translation: {
             nav: {
-                backToArena: "Back to Arena",
                 forfeit: "Forfeit",
+                forfeitConfirm: "Forfeit the round?",
+                forfeitWarning: "You will not earn any points for this round.",
+                forfeitYes: "Yes, give up",
+                forfeitCancel: "Continue playing",
+                backToArena: "Back to the arena"
             },
             hero: {
                 subtitle:
                     "A bot draws. You guess. How fast can you figure it out?",
                 play: "Play Now",
+                wordLanguageDisclaimer: "Words are always in English"
             },
             howToPlay: {
                 title: "How to Play",
@@ -89,7 +114,7 @@ const resources = {
                     {
                         title: "Bot Draws",
                         description:
-                            "An AI bot draws a secret word on the canvas, stroke by stroke.",
+                            "A bot draws a secret word on the canvas, stroke by stroke.",
                     },
                     {
                         title: "You Guess",
@@ -139,7 +164,22 @@ const resources = {
                 quit: "Quit",
                 continue: "Next round",
                 finish: "Finish",
+                forfeited: "Forfeited the round",
             },
+            leaderboard: {
+                title: "Leaderboard",
+                reset: "Reset",
+                confirmQuestion: "Are you sure?",
+                confirmYes: "Yes, delete",
+                confirmCancel: "Cancel",
+                empty: "No results yet. Play a game!",
+                rounds: "rounds",
+                difficulty: {
+                    easy: "Easy",
+                    medium: "Medium",
+                    hard: "Hard"
+                }
+            }
         },
     },
 };

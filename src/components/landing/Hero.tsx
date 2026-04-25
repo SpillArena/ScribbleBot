@@ -20,6 +20,9 @@ export default function Hero() {
             <p className="text-lg text-black/50 dark:text-white/60 max-w-md">
                 {t("hero.subtitle")}
             </p>
+            <p className="text-md text-center text-gray-400 dark:text-gray-500 mt-2">
+                {t("hero.wordLanguageDisclaimer")}
+            </p>
         </motion.section>
     );
 }

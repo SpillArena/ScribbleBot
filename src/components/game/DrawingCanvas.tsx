@@ -1,34 +1,40 @@
 // src/components/game/DrawingCanvas.tsx
 import { useRef, useEffect, useState } from "react";
 import { useGameStore } from "../../store/gameStore";
-import { fetchStrokes } from "../../lib/quickDraw";
+import { fetchStrokes, type StrokeData } from "../../lib/quickDraw";
 import { useBotDrawing } from "../../hooks/useBotDrawing";
-
-type Stroke = [number[], number[], number[]?];
 
 export default function DrawingCanvas() {
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const currentWord = useGameStore((s) => s.currentWord);
-    const [strokes, setStrokes] = useState<Stroke[]>([]);
-
-    useEffect(() => {
-        const canvas = canvasRef.current;
-        if (!canvas) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-    }, []);
+    const phase = useGameStore((s) => s.phase);
+    const [strokes, setStrokes] = useState<StrokeData>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         if (!currentWord) return;
         let cancelled = false;
 
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext("2d");
+        if (ctx && canvas) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
         fetchStrokes(currentWord)
             .then((data) => {
-                if (!cancelled) setStrokes(data);
+                if (!cancelled) {
+                    setStrokes(data);
+                    setIsLoading(false);
+                }
             })
             .catch(console.error);
+
+        Promise.resolve().then(() => {
+            if (!cancelled) setIsLoading(true);
+        });
 
         return () => {
             cancelled = true;
@@ -36,10 +42,16 @@ export default function DrawingCanvas() {
         };
     }, [currentWord]);
 
-    useBotDrawing(canvasRef, strokes);
+    // Only pass strokes to the drawing hook when the round is active
+    useBotDrawing(canvasRef, phase === "playing" ? strokes : []);
 
     return (
-        <div className="rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-lg">
+        <div className="relative rounded-2xl overflow-hidden border border-black/10 dark:border-white/10 shadow-lg">
+            {isLoading && phase !== "playing" && (
+                <div className="absolute inset-0 flex items-center justify-center bg-white/80">
+                    <span className="text-sm text-gray-400">Laster tegning...</span>
+                </div>
+            )}
             <canvas
                 ref={canvasRef}
                 width={800}
