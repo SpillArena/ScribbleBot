@@ -5,11 +5,17 @@ import type { StrokeData } from "../lib/quickDraw";
 
 const CANVAS_SIZE = 255;
 
-// How much of the drawing the bot completes (randomised per round within range)
 const completionRange: Record<Difficulty, [number, number]> = {
     easy:   [1.00, 1.00], // always finishes
-    medium: [0.55, 0.80], // finishes 55–80%
-    hard:   [0.30, 0.55], // finishes 30–55%
+    medium: [1.00, 1.00], // always finishes
+    hard:   [1.00, 1.00], // always finishes
+};
+
+// How fast the bot draws (fraction of round time used)
+const durationFactor: Record<Difficulty, number> = {
+    easy:   0.35, // fastest — finishes well before time runs out
+    medium: 0.50, // moderate pace
+    hard:   0.65, // slowest — draws right up until near the end
 };
 
 function randomInRange(min: number, max: number): number {
@@ -42,7 +48,7 @@ export function useBotDrawing(
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        const totalDuration = difficultyTime[difficulty] * 1000 * 0.65;
+        const totalDuration = difficultyTime[difficulty] * 1000 * durationFactor[difficulty];
         const scaleX = canvas.width / CANVAS_SIZE;
         const scaleY = canvas.height / CANVAS_SIZE;
 

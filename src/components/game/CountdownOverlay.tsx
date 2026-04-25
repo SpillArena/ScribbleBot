@@ -39,7 +39,7 @@ export default function CountdownOverlay() {
             {visible && (
                 <motion.div
                     className="fixed inset-0 z-50 flex items-center justify-center"
-                    initial={{ opacity: 1 }} // 👈 start fully visible, no fade-in delay
+                    initial={{ opacity: 1 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
@@ -66,15 +66,8 @@ export default function CountdownOverlay() {
                             className="relative flex flex-col items-center gap-4"
                             initial={{ opacity: 0, scale: 0.4 }}
                             animate={{ opacity: 1, scale: 1 }}
-                            exit={{
-                                opacity: 0,
-                                scale: 2,
-                                filter: "blur(8px)",
-                            }}
-                            transition={{
-                                duration: 0.35,
-                                ease: [0.34, 1.56, 0.64, 1],
-                            }}
+                            exit={{ opacity: 0, scale: 2, filter: "blur(8px)" }}
+                            transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
                         >
                             <span
                                 className={`text-[120px] leading-none font-black select-none tracking-tight ${isGo
@@ -93,6 +86,18 @@ export default function CountdownOverlay() {
                                     transition={{ delay: 0.1 }}
                                 >
                                     {t("game.getReady")}
+                                </motion.p>
+                            )}
+
+                            {/* Disclaimer — shown on numbers, hidden on Go! */}
+                            {!isGo && (
+                                <motion.p
+                                    className="text-white/30 text-sm font-medium"
+                                    initial={{ opacity: 0, y: 6 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.2 }}
+                                >
+                                    {t("hero.wordLanguageDisclaimer")}
                                 </motion.p>
                             )}
                         </motion.div>

@@ -1,5 +1,6 @@
 // src/store/gameStore.ts
 import { create } from "zustand";
+import { saveScore } from "../lib/leaderbord";
 
 export type Difficulty = "easy" | "medium" | "hard";
 export type View = "landing" | "game";
@@ -11,14 +12,12 @@ export const difficultyTime: Record<Difficulty, number> = {
     hard: 30,
 };
 
-// Fallback word pool if the fetch fails
 const FALLBACK_WORDS: string[] = [
     "apple", "banana", "cat", "dog", "house", "car", "tree", "fish",
     "bird", "clock", "pizza", "guitar", "elephant", "bicycle", "mountain",
     "rainbow", "umbrella", "volcano", "keyboard", "airplane",
 ];
 
-// Mutable pool — populated by initWordBank() on app start
 let wordPool: string[] = [...FALLBACK_WORDS];
 
 export async function initWordBank(): Promise<void> {
@@ -31,7 +30,6 @@ export async function initWordBank(): Promise<void> {
         const words = text.trim().split("\n").filter(Boolean);
         if (words.length > 0) wordPool = words;
     } catch {
-        // Silently fall back to FALLBACK_WORDS
         console.warn("Could not fetch Quick Draw categories, using fallback word list.");
     }
 }
@@ -74,6 +72,7 @@ interface GameState {
     timeLeft: number;
     revealedIndices: number[];
     wordGuessed: boolean;
+    forfeit: boolean;
     setView: (view: View) => void;
     setPhase: (phase: GamePhase) => void;
     updateSettings: (settings: Partial<GameSettings>) => void;
@@ -83,6 +82,7 @@ interface GameState {
     setTimeLeft: (time: number) => void;
     setRevealedIndices: (indices: number[]) => void;
     setWordGuessed: (guessed: boolean) => void;
+    setForfeit: (forfeit: boolean) => void;
     startGame: () => void;
     nextRound: () => void;
     resetGame: () => void;
@@ -105,6 +105,7 @@ export const useGameStore = create<GameState>((set) => ({
     timeLeft: 0,
     revealedIndices: [],
     wordGuessed: false,
+    forfeit: false,
     setView: (view) => set({ view }),
     setPhase: (phase) => set({ phase }),
     updateSettings: (newSettings) =>
@@ -118,6 +119,7 @@ export const useGameStore = create<GameState>((set) => ({
     setTimeLeft: (timeLeft) => set({ timeLeft }),
     setRevealedIndices: (revealedIndices) => set({ revealedIndices }),
     setWordGuessed: (wordGuessed) => set({ wordGuessed }),
+    setForfeit: (forfeit) => set({ forfeit }),
     startGame: () =>
         set(() => ({
             view: "game",
@@ -129,6 +131,7 @@ export const useGameStore = create<GameState>((set) => ({
             timeLeft: 0,
             revealedIndices: [],
             wordGuessed: false,
+            forfeit: false,
         })),
     nextRound: () =>
         set((state) => ({
@@ -139,19 +142,30 @@ export const useGameStore = create<GameState>((set) => ({
             timeLeft: 0,
             revealedIndices: [],
             wordGuessed: false,
+            forfeit: false,
         })),
     resetGame: () =>
-        set({
-            score: 0,
-            currentRound: 1,
-            guesses: [],
-            currentWord: "",
-            phase: "roundEnd",
-            timeLeft: 0,
-            revealedIndices: [],
-            wordGuessed: false,
-            settings: defaultSettings,
-            username: "",
-            view: "landing",
+        set((state) => {
+            saveScore({
+                username: state.username || "Anonym",
+                score: state.score,
+                difficulty: state.settings.difficulty,
+                rounds: state.settings.rounds,
+                date: new Date().toISOString(),
+            });
+            return {
+                score: 0,
+                currentRound: 1,
+                guesses: [],
+                currentWord: "",
+                phase: "countdown",
+                timeLeft: 0,
+                revealedIndices: [],
+                wordGuessed: false,
+                forfeit: false,
+                settings: defaultSettings,
+                username: "",
+                view: "landing",
+            };
         }),
 }));

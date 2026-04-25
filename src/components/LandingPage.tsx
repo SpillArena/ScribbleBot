@@ -2,6 +2,7 @@
 import Layout from "./_layout";
 import Hero from "./landing/Hero";
 import HowToPlay from "./landing/HowToPlay";
+import Leaderboard from "./landing/Leaderboard";
 import Settings from "./landing/Settings";
 import UsernameInput from "./landing/UsernameInput";
 
@@ -13,6 +14,7 @@ export default function LandingPage() {
                 <UsernameInput />
                 <Settings />
                 <HowToPlay />
+                <Leaderboard />
             </div>
         </Layout>
     );

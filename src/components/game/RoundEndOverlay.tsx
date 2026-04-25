@@ -1,4 +1,3 @@
-// src/components/game/RoundEndOverlay.tsx
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../store/gameStore";
 import { useTranslation } from "react-i18next";
@@ -8,6 +7,7 @@ export default function RoundEndOverlay() {
     const phase = useGameStore((s) => s.phase);
     const word = useGameStore((s) => s.currentWord);
     const wordGuessed = useGameStore((s) => s.wordGuessed);
+    const forfeit = useGameStore((s) => s.forfeit);
     const currentRound = useGameStore((s) => s.currentRound);
     const settings = useGameStore((s) => s.settings);
     const nextRound = useGameStore((s) => s.nextRound);
@@ -45,44 +45,38 @@ export default function RoundEndOverlay() {
                         {/* Status row */}
                         <div className="flex items-center gap-3">
                             {wordGuessed ? (
-                                <CheckCircle
-                                    size={22}
-                                    className="text-green-400 shrink-0"
-                                />
+                                <CheckCircle size={22} className="text-green-400 shrink-0" />
                             ) : (
-                                <XCircle
-                                    size={22}
-                                    className="text-red-400 shrink-0"
-                                />
+                                <XCircle size={22} className="text-red-400 shrink-0" />
                             )}
                             <p className="text-sm font-semibold text-white/70 uppercase tracking-widest">
-                                {wordGuessed
-                                    ? t("game.correct")
-                                    : t("game.gaveUp")}
+                                {wordGuessed ? t("game.correct") : t("game.gaveUp")}
                             </p>
                         </div>
 
-                        {/* Word reveal */}
-                        <div className="flex items-center gap-1.5 flex-wrap">
-                            {word.split("").map((char, i) =>
-                                char === " " ? (
-                                    <div key={i} className="w-3" />
-                                ) : (
-                                    <motion.div
-                                        key={i}
-                                        className="flex flex-col items-center gap-1"
-                                        initial={{ opacity: 0, y: -4 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        transition={{ delay: i * 0.03 }}
-                                    >
-                                        <span className="text-lg font-black text-white select-none">
-                                            {char}
-                                        </span>
-                                        <div className="w-5 h-0.5 bg-white/30 rounded-full" />
-                                    </motion.div>
-                                )
-                            )}
-                        </div>
+                        {/* Word reveal — hidden when forfeiting */}
+                        {!forfeit && (
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                                {word.split("").map((char, i) =>
+                                    char === " " ? (
+                                        <div key={i} className="w-3" />
+                                    ) : (
+                                        <motion.div
+                                            key={i}
+                                            className="flex flex-col items-center gap-1"
+                                            initial={{ opacity: 0, y: -4 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.03 }}
+                                        >
+                                            <span className="text-lg font-black text-white select-none">
+                                                {char}
+                                            </span>
+                                            <div className="w-5 h-0.5 bg-white/30 rounded-full" />
+                                        </motion.div>
+                                    )
+                                )}
+                            </div>
+                        )}
 
                         {/* Buttons */}
                         <div className="flex gap-2">
@@ -96,9 +90,7 @@ export default function RoundEndOverlay() {
                                 onClick={handleContinue}
                                 className="flex-1 py-2 rounded-xl text-sm font-semibold text-white bg-violet-500 hover:bg-violet-400 transition-colors cursor-pointer"
                             >
-                                {isLastRound
-                                    ? t("game.finish")
-                                    : t("game.continue")}
+                                {isLastRound ? t("game.finish") : t("game.continue")}
                             </button>
                         </div>
                     </div>
