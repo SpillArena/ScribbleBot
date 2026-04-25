@@ -86,6 +86,7 @@ interface GameState {
     startGame: () => void;
     nextRound: () => void;
     resetGame: () => void;
+    forfeitRound: () => void;
 }
 
 const defaultSettings: GameSettings = {
@@ -168,4 +169,11 @@ export const useGameStore = create<GameState>((set) => ({
                 view: "landing",
             };
         }),
+    forfeitRound: () =>
+    set(() => ({
+        phase: "roundEnd",
+        forfeit: true,
+        timeLeft: 0,
+        wordGuessed: false,
+    })),
 }));

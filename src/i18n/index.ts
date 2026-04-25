@@ -7,8 +7,8 @@ const resources = {
         translation: {
             nav: {
                 forfeit: "Gi opp",
-                forfeitConfirm: "Gi opp spillet?",
-                forfeitWarning: "Fremgangen din vil gå tapt og du sendes tilbake til forsiden.",
+                forfeitConfirm: "Gi opp runden?",
+                forfeitWarning: "Du vil ikke få poeng for denne runden",
                 forfeitYes: "Ja, gi opp",
                 forfeitCancel: "Fortsett å spille",
                 backToArena: "Tilbake til arenaen"
@@ -74,6 +74,7 @@ const resources = {
                 quit: "Avslutt",
                 continue: "Neste runde",
                 finish: "Avslutt",
+                forfeited: "Ga opp runden",
             },
             leaderboard: {
                 title: "Toppliste",
@@ -95,8 +96,8 @@ const resources = {
         translation: {
             nav: {
                 forfeit: "Forfeit",
-                forfeitConfirm: "Forfeit the game?",
-                forfeitWarning: "Your progress will be lost and you will be sent back to the homepage.",
+                forfeitConfirm: "Forfeit the round?",
+                forfeitWarning: "You will not earn any points for this round.",
                 forfeitYes: "Yes, give up",
                 forfeitCancel: "Continue playing",
                 backToArena: "Back to the arena"
@@ -163,6 +164,7 @@ const resources = {
                 quit: "Quit",
                 continue: "Next round",
                 finish: "Finish",
+                forfeited: "Forfeited the round",
             },
             leaderboard: {
                 title: "Leaderboard",

@@ -11,9 +11,7 @@ export default function Header() {
     const theme = useThemeStore((s) => s.theme);
     const { t, i18n } = useTranslation();
     const view = useGameStore((s) => s.view);
-    const resetGame = useGameStore((s) => s.resetGame);
-    const setView = useGameStore((s) => s.setView);
-    const setForfeit = useGameStore((s) => s.setForfeit);
+    const forfeitRound = useGameStore((s) => s.forfeitRound);
     const [showConfirm, setShowConfirm] = useState(false);
 
     const toggleLanguage = () => {
@@ -21,9 +19,7 @@ export default function Header() {
     };
 
     const handleForfeitConfirm = () => {
-        setForfeit(true);
-        resetGame();
-        setView("landing");
+        forfeitRound(); // ends round → shows RoundEndOverlay with word revealed
         setShowConfirm(false);
     };
 
@@ -70,7 +66,6 @@ export default function Header() {
                             <Globe size={15} />
                             {i18n.language === "no" ? "EN" : "NO"}
                         </button>
-
                         <button
                             onClick={toggleTheme}
                             className="p-2 rounded-lg text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
@@ -92,13 +87,10 @@ export default function Header() {
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.2 }}
                     >
-                        {/* Backdrop */}
                         <motion.div
                             className="absolute inset-0 bg-black/50 backdrop-blur-sm"
                             onClick={() => setShowConfirm(false)}
                         />
-
-                        {/* Dialog */}
                         <motion.div
                             className="relative bg-white dark:bg-zinc-900 border border-black/10 dark:border-white/10 rounded-2xl shadow-xl p-6 w-full max-w-sm flex flex-col gap-4"
                             initial={{ opacity: 0, scale: 0.92, y: 8 }}
@@ -114,7 +106,6 @@ export default function Header() {
                                     {t("nav.forfeitWarning")}
                                 </p>
                             </div>
-
                             <div className="flex gap-2 justify-end">
                                 <button
                                     onClick={() => setShowConfirm(false)}
