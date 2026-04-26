@@ -10,7 +10,11 @@ export default defineConfig({
             "/quickdraw": {
                 target: "https://storage.googleapis.com/quickdraw_dataset/full/simplified",
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/quickdraw/, ""),
+                secure: false,
+                headers: {
+                    "Origin": "https://storage.googleapis.com",
+                },
+                rewrite: (path: string) => path.replace(/^\/quickdraw/, ""),
             },
         },
     },

@@ -53,6 +53,7 @@ export interface GuessEntry {
     text: string;
     correct: boolean;
     timestamp: number;
+    proximity: "correct" | "close" | "none";
 }
 
 interface GameSettings {
