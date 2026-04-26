@@ -75,6 +75,9 @@ const resources = {
                 continue: "Neste runde",
                 finish: "Avslutt",
                 forfeited: "Ga opp runden",
+                close: 'Nærme!',
+                noGuessesYet: 'Ingen gjetninger ennå. Skriv inn ditt første gjetning!',
+                category: "Kategori"
             },
             leaderboard: {
                 title: "Toppliste",
@@ -165,6 +168,9 @@ const resources = {
                 continue: "Next round",
                 finish: "Finish",
                 forfeited: "Forfeited the round",
+                close: 'Close!',
+                noGuessesYet: 'No guesses yet. Type in your first guess!',
+                category: "Category"
             },
             leaderboard: {
                 title: "Leaderboard",
