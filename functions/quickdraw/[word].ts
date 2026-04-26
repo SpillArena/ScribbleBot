@@ -1,14 +1,18 @@
 // functions/quickdraw/[word].ts
-export const onRequest: PagesFunction = async (context) => {
-    const { params, request } = context as {
-        params: Record<string, string>;
-        request: Request;
-    };
 
-    const word = decodeURIComponent(params.word as string).replace(".ndjson", "");
+interface PagesContext {
+    params: Record<string, string>;
+    request: Request;
+    env: Record<string, unknown>;
+    next: () => Promise<Response>;
+    data: Record<string, unknown>;
+}
+
+export const onRequest = async (context: PagesContext) => {
+    const word = decodeURIComponent(context.params.word).replace(".ndjson", "");
     const upstream = `https://storage.googleapis.com/quickdraw_dataset/full/simplified/${encodeURIComponent(word)}.ndjson`;
 
-    const rangeHeader = request.headers.get("Range");
+    const rangeHeader = context.request.headers.get("Range");
 
     try {
         const upstreamResponse = await fetch(upstream, {
@@ -16,11 +20,9 @@ export const onRequest: PagesFunction = async (context) => {
                 ...(rangeHeader ? { Range: rangeHeader } : {}),
                 "User-Agent": "Mozilla/5.0",
             },
-            // Cloudflare Workers follow redirects by default — ensure that:
             redirect: "follow",
         });
 
-        // Accept both 200 and 206 as success
         if (!upstreamResponse.ok && upstreamResponse.status !== 206) {
             return new Response(`Not found: ${word} (status ${upstreamResponse.status})`, {
                 status: upstreamResponse.status,
