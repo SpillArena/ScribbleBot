@@ -36,9 +36,9 @@ function parseChunk(text: string): StrokeData | null {
 
 export async function fetchStrokes(word: string): Promise<StrokeData> {
     const url = `/quickdraw/${encodeURIComponent(word)}.ndjson`;
-    const FILE_SIZE = 50_000_000; // ~50MB, safe upper bound
+    const FILE_SIZE = 50_000_000;
     const CHUNK = 65536;
-    const MAX_ATTEMPTS = 8;
+    const MAX_ATTEMPTS = 2;
 
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
         // First 2 attempts always use the start of the file (guaranteed complete lines)
