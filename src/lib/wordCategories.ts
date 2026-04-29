@@ -77,6 +77,10 @@ const categoryLabels: Record<string, { en: string; no: string }> = {
     music:     { en: "Music",     no: "Musikk" },
 };
 
+export function getAllWords(): string[] {
+    return Object.values(categories).flat();
+}
+
 export function getCategory(word: string, lang: string = "en"): string | null {
     const normalized = word.toLowerCase().trim();
     for (const [key, words] of Object.entries(categories)) {
