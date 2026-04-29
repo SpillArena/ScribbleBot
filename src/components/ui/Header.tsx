@@ -24,11 +24,14 @@ export default function Header() {
     };
 
     const handleNavAction = () => {
-        if (view === "game") {
+        const isInGame = view === "game";
+
+        if (isInGame) {
             setShowConfirm(true);
-        } else {
-            window.location.href = "https://spillarena.no";
+            return;
         }
+
+        window.open("https://spillarena.no", "_self", "noopener,noreferrer");
     };
 
     const isGameActive = view === "game";

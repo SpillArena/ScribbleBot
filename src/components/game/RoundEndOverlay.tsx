@@ -1,4 +1,3 @@
-// src/components/game/RoundEndOverlay.tsx
 import { motion, AnimatePresence } from "framer-motion";
 import { useGameStore } from "../../store/gameStore";
 import { useTranslation } from "react-i18next";
@@ -43,8 +42,6 @@ export default function RoundEndOverlay() {
                     transition={{ duration: 0.35, ease: [0.34, 1.56, 0.64, 1] }}
                 >
                     <div className="flex flex-col gap-4 px-6 py-5 rounded-2xl bg-white/10 dark:bg-white/5 border border-white/20 shadow-2xl backdrop-blur-md">
-
-                        {/* Status row */}
                         <div className="flex items-center gap-3">
                             {wordGuessed ? (
                                 <CheckCircle size={22} className="text-green-400 shrink-0" />
@@ -62,7 +59,6 @@ export default function RoundEndOverlay() {
                             </p>
                         </div>
 
-                        {/* Word reveal — always shown (including on forfeit) */}
                         <div className="flex items-center gap-1.5 flex-wrap">
                             {word.split("").map((char, i) =>
                                 char === " " ? (
@@ -84,21 +80,24 @@ export default function RoundEndOverlay() {
                             )}
                         </div>
 
-                        {/* Buttons */}
                         <div className="flex gap-2">
-                            <button
-                                onClick={handleQuit}
-                                className="flex-1 py-2 rounded-xl text-sm font-semibold text-white bg-red-900 border border-red-400 hover:bg-red-500 transition-colors cursor-pointer"
-                            >
-                                {t("game.quit")}
-                            </button>
+                            {!isLastRound && (
+                                <button
+                                    onClick={handleQuit}
+                                    className="flex-1 py-2 rounded-xl text-sm font-semibold text-white bg-red-900 border border-red-400 hover:bg-red-500 transition-colors cursor-pointer"
+                                >
+                                    {t("game.quit")}
+                                </button>
+                            )}
+
                             <button
                                 onClick={handleContinue}
-                                className="flex-1 py-2 rounded-xl text-sm font-semibold text-white bg-violet-500 hover:bg-violet-400 transition-colors cursor-pointer"
+                                className={`py-2 rounded-xl text-sm font-semibold text-white transition-colors cursor-pointer ${isLastRound
+                                        ? "w-full bg-violet-500 hover:bg-violet-400"
+                                        : "flex-1 bg-violet-500 hover:bg-violet-400"
+                                    }`}
                             >
-                                {isLastRound
-                                    ? t("game.finish")
-                                    : t("game.continue")}
+                                {isLastRound ? t("game.finish") : t("game.continue")}
                             </button>
                         </div>
                     </div>
