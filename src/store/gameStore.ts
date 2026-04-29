@@ -1,6 +1,7 @@
 // src/store/gameStore.ts
 import { create } from "zustand";
 import { saveScore } from "../lib/leaderbord";
+import { getAllWords } from "../lib/wordCategories";
 
 export type Difficulty = "easy" | "medium" | "hard";
 export type View = "landing" | "game";
@@ -21,17 +22,7 @@ const FALLBACK_WORDS: string[] = [
 let wordPool: string[] = [...FALLBACK_WORDS];
 
 export async function initWordBank(): Promise<void> {
-    try {
-        const res = await fetch(
-            "https://raw.githubusercontent.com/googlecreativelab/quickdraw-dataset/master/categories.txt"
-        );
-        if (!res.ok) throw new Error("Failed to fetch categories");
-        const text = await res.text();
-        const words = text.trim().split("\n").filter(Boolean);
-        if (words.length > 0) wordPool = words;
-    } catch {
-        console.warn("Could not fetch Quick Draw categories, using fallback word list.");
-    }
+    wordPool = getAllWords();
 }
 
 export function getWordPool(): string[] {
