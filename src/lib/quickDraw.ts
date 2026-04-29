@@ -21,6 +21,18 @@ async function fetchChunk(url: string, offset: number, size = 65536): Promise<st
     return response.text();
 }
 
+function getQuickdrawUrls(word: string): string[] {
+    const encodedWord = encodeURIComponent(word);
+    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, "");
+    const urls = [`${baseUrl}/quickdraw/${encodedWord}.ndjson`];
+
+    if (baseUrl !== "") {
+        urls.push(`/quickdraw/${encodedWord}.ndjson`);
+    }
+
+    return urls;
+}
+
 function parseChunk(text: string): StrokeData | null {
     const lines = text.split("\n").filter((l) => l.trim().length > 0);
     // Skip first and last lines — likely incomplete due to byte range cut
@@ -35,22 +47,27 @@ function parseChunk(text: string): StrokeData | null {
 }
 
 export async function fetchStrokes(word: string): Promise<StrokeData> {
-    const url = `/quickdraw/${encodeURIComponent(word)}.ndjson`;
     const FILE_SIZE = 50_000_000;
     const CHUNK = 65536;
-    const MAX_ATTEMPTS = 2;
+    const MAX_ATTEMPTS = 12;
+    const DETERMINISTIC_ATTEMPTS = 2;
+    const urls = getQuickdrawUrls(word);
 
     for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
-        // First 2 attempts always use the start of the file (guaranteed complete lines)
-        const offset = attempt < 2
+        // Use the first two chunks near the start, then fall back to random offsets.
+        const offset = attempt < DETERMINISTIC_ATTEMPTS
             ? attempt * CHUNK
-            : Math.floor(Math.random() * (FILE_SIZE - CHUNK));
+            : Math.floor(Math.random() * Math.max(1, FILE_SIZE - CHUNK));
 
-        try {
-            const text = await fetchChunk(url, offset, CHUNK);
-            const result = parseChunk(text);
-            if (result) return result;
-        } catch { continue; }
+        for (const url of urls) {
+            try {
+                const text = await fetchChunk(url, offset, CHUNK);
+                const result = parseChunk(text);
+                if (result) return result;
+            } catch {
+                continue;
+            }
+        }
     }
 
     throw new Error(`Could not find a recognized drawing for "${word}" after ${MAX_ATTEMPTS} attempts`);
