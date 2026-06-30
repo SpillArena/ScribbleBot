@@ -1,7 +1,7 @@
 // src/components/ui/_layout.tsx
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import Header from "./ui/Header";
+import HeaderSection from "./header/HeaderSection";
 import Footer from "./ui/Footer";
 import DrawingBackground from "./ui/DrawingBackground";
 
@@ -19,7 +19,7 @@ export default function Layout({ children }: LayoutProps) {
             transition={{ duration: 0.3 }}
         >
             <DrawingBackground />
-            <Header />
+            <HeaderSection />
             <main className="relative flex-1 z-10">{children}</main>
             <Footer />
         </motion.div>

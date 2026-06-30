@@ -13,6 +13,10 @@ const resources = {
                 forfeitCancel: "Fortsett å spille",
                 backToArena: "Tilbake til arenaen"
             },
+            languageSwitcher: {
+                choose: "Velg språk",
+                section: "Språk"
+            },
             hero: {
                 subtitle: "En bot tegner. Du gjetter. Hvor raskt klarer du det?",
                 play: "Spill nå",
@@ -104,6 +108,10 @@ const resources = {
                 forfeitYes: "Yes, give up",
                 forfeitCancel: "Continue playing",
                 backToArena: "Back to the arena"
+            },
+            languageSwitcher: {
+                choose: "Choose language",
+                section: "Language"
             },
             hero: {
                 subtitle:

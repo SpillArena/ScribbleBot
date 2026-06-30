@@ -1,7 +1,7 @@
 // src/components/ui/Footer.tsx
 import { ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import GitHubIcon from "./GitHubIcon";
+import { Github } from "../../lib/icons";
 
 export default function Footer() {
     const { t } = useTranslation();
@@ -16,7 +16,7 @@ export default function Footer() {
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 font-semibold text-black/60 dark:text-white/60 hover:text-violet-500 dark:hover:text-violet-400 transition-colors cursor-pointer"
                 >
-                    <GitHubIcon size={15} />
+                    <Github size={15} />
                     EmilB04
                     <ExternalLink size={13} />
                 </a>
