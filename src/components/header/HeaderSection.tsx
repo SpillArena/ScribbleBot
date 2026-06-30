@@ -1,22 +1,17 @@
 // src/components/ui/Header.tsx
-import { Sun, Moon, Globe, ChevronLeft, Flag } from "lucide-react";
-import { useThemeStore } from "../../store/themeStore";
+import { ChevronLeft, Flag } from "lucide-react";
 import { useGameStore } from "../../store/gameStore";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { ThemeSwitcher } from "./ThemeSwitcher";
 
-export default function Header() {
-    const toggleTheme = useThemeStore((s) => s.toggleTheme);
-    const theme = useThemeStore((s) => s.theme);
-    const { t, i18n } = useTranslation();
+export default function HeaderSection() {
+    const { t } = useTranslation();
     const view = useGameStore((s) => s.view);
     const forfeitRound = useGameStore((s) => s.forfeitRound);
     const [showConfirm, setShowConfirm] = useState(false);
-
-    const toggleLanguage = () => {
-        i18n.changeLanguage(i18n.language === "no" ? "en" : "no");
-    };
 
     const handleForfeitConfirm = () => {
         forfeitRound(); // ends round → shows RoundEndOverlay with word revealed
@@ -43,8 +38,8 @@ export default function Header() {
                     <button
                         onClick={handleNavAction}
                         className={`flex items-center gap-2 text-sm font-medium transition-colors cursor-pointer ${isGameActive
-                                ? "text-red-500 hover:text-red-400"
-                                : "text-black/60 dark:text-white/60 hover:text-violet-500 dark:hover:text-violet-400"
+                            ? "text-red-500 hover:text-red-400"
+                            : "text-black/60 dark:text-white/60 hover:text-violet-500 dark:hover:text-violet-400"
                             }`}
                     >
                         {isGameActive ? (
@@ -61,21 +56,8 @@ export default function Header() {
                     </button>
 
                     <div className="flex items-center gap-2">
-                        <button
-                            onClick={toggleLanguage}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
-                            title="Switch language"
-                        >
-                            <Globe size={15} />
-                            {i18n.language === "no" ? "EN" : "NO"}
-                        </button>
-                        <button
-                            onClick={toggleTheme}
-                            className="p-2 rounded-lg text-black/60 dark:text-white/60 hover:bg-black/5 dark:hover:bg-white/10 transition-colors cursor-pointer"
-                            title="Toggle theme"
-                        >
-                            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-                        </button>
+                        <LanguageSwitcher />
+                        <ThemeSwitcher />
                     </div>
                 </div>
             </header>

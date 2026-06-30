@@ -2,19 +2,18 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-type Theme = "dark" | "light";
+type Theme = "dark" | "light" | "system";
 
 interface ThemeState {
     theme: Theme;
-    toggleTheme: () => void;
+    setTheme: (theme: Theme) => void;
 }
 
 export const useThemeStore = create<ThemeState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             theme: "dark",
-            toggleTheme: () =>
-                set({ theme: get().theme === "dark" ? "light" : "dark" }),
+            setTheme: (theme) => set({ theme }),
         }),
         { name: "scribblebot-theme" }
     )
